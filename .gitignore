@@ -16,3 +16,4 @@ Thumbs.db
 
 # Log files
 *.log
+/.metadata/

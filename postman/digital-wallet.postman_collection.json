@@ -1,0 +1,530 @@
+{
+	"info": {
+		"_postman_id": "digital-wallet-e2e-collection",
+		"name": "Digital Wallet System E2E Flow",
+		"description": "Postman Collection for testing Digital Wallet microservices end-to-end.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "http://localhost:8080"
+		},
+		{
+			"key": "aliceUserId",
+			"value": ""
+		},
+		{
+			"key": "bobUserId",
+			"value": ""
+		},
+		{
+			"key": "aliceToken",
+			"value": ""
+		},
+		{
+			"key": "bobToken",
+			"value": ""
+		}
+	],
+	"item": [
+		{
+			"name": "1. Signup Alice",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('Status code is 201', function () {",
+							"    pm.response.to.have.status(201);",
+							"});",
+							"var jsonData = pm.response.json();",
+							"pm.collectionVariables.set('aliceUserId', jsonData.id);",
+							"console.log('Alice User ID saved: ' + jsonData.id);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"name\": \"alice\",\n  \"email\": \"alice@example.com\",\n  \"password\": \"password123\",\n  \"role\": \"USER\"\n}"
+				},
+				"url": {
+					"raw": "{{baseUrl}}/auth/signup",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"auth",
+						"signup"
+					]
+				}
+			}
+		},
+		{
+			"name": "2. Signup Bob",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('Status code is 201', function () {",
+							"    pm.response.to.have.status(201);",
+							"});",
+							"var jsonData = pm.response.json();",
+							"pm.collectionVariables.set('bobUserId', jsonData.id);",
+							"console.log('Bob User ID saved: ' + jsonData.id);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"name\": \"bob\",\n  \"email\": \"bob@example.com\",\n  \"password\": \"password123\",\n  \"role\": \"USER\"\n}"
+				},
+				"url": {
+					"raw": "{{baseUrl}}/auth/signup",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"auth",
+						"signup"
+					]
+				}
+			}
+		},
+		{
+			"name": "3. Login Alice",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('Status code is 200', function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"var jsonData = pm.response.json();",
+							"pm.collectionVariables.set('aliceToken', jsonData.token);",
+							"console.log('Alice Token saved');"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"email\": \"alice@example.com\",\n  \"password\": \"password123\"\n}"
+				},
+				"url": {
+					"raw": "{{baseUrl}}/auth/login",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"auth",
+						"login"
+					]
+				}
+			}
+		},
+		{
+			"name": "4. Login Bob",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('Status code is 200', function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"var jsonData = pm.response.json();",
+							"pm.collectionVariables.set('bobToken', jsonData.token);",
+							"console.log('Bob Token saved');"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"email\": \"bob@example.com\",\n  \"password\": \"password123\"\n}"
+				},
+				"url": {
+					"raw": "{{baseUrl}}/auth/login",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"auth",
+						"login"
+					]
+				}
+			}
+		},
+		{
+			"name": "5. Check Alice Initial Balance (0)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('Status code is 200', function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"var jsonData = pm.response.json();",
+							"pm.test('Balance is 0', function() {",
+							"    pm.expect(jsonData.balance).to.eql(0);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{aliceToken}}"
+					}
+				],
+				"url": {
+					"raw": "{{baseUrl}}/wallets/{{aliceUserId}}",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"wallets",
+						"{{aliceUserId}}"
+					]
+				}
+			}
+		},
+		{
+			"name": "6. Topup Alice Balance (500)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('Status code is 200', function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"var jsonData = pm.response.json();",
+							"pm.test('Balance is 500', function() {",
+							"    pm.expect(jsonData.balance).to.eql(500);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{aliceToken}}"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"amount\": 500\n}"
+				},
+				"url": {
+					"raw": "{{baseUrl}}/wallets/{{aliceUserId}}/topup",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"wallets",
+						"{{aliceUserId}}",
+						"topup"
+					]
+				}
+			}
+		},
+		{
+			"name": "7. Transfer 200 from Alice to Bob",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('Status code is 200', function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"var jsonData = pm.response.json();",
+							"pm.test('Transaction status is SUCCESS', function() {",
+							"    pm.expect(jsonData.status).to.eql('SUCCESS');",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{aliceToken}}"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"senderId\": {{aliceUserId}},\n  \"receiverId\": {{bobUserId}},\n  \"amount\": 200\n}"
+				},
+				"url": {
+					"raw": "{{baseUrl}}/transactions/transfer",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"transactions",
+						"transfer"
+					]
+				}
+			}
+		},
+		{
+			"name": "8. Check Alice Updated Balance (300)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('Status code is 200', function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"var jsonData = pm.response.json();",
+							"pm.test('Balance is 300', function() {",
+							"    pm.expect(jsonData.balance).to.eql(300);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{aliceToken}}"
+					}
+				],
+				"url": {
+					"raw": "{{baseUrl}}/wallets/{{aliceUserId}}",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"wallets",
+						"{{aliceUserId}}"
+					]
+				}
+			}
+		},
+		{
+			"name": "9. Check Bob Updated Balance (200)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('Status code is 200', function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"var jsonData = pm.response.json();",
+							"pm.test('Balance is 200', function() {",
+							"    pm.expect(jsonData.balance).to.eql(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{bobToken}}"
+					}
+				],
+				"url": {
+					"raw": "{{baseUrl}}/wallets/{{bobUserId}}",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"wallets",
+						"{{bobUserId}}"
+					]
+				}
+			}
+		},
+		{
+			"name": "10. View Alice Transaction History",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('Status code is 200', function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"var jsonData = pm.response.json();",
+							"pm.test('Contains at least one transaction', function() {",
+							"    pm.expect(jsonData.length).to.be.at.least(1);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{aliceToken}}"
+					}
+				],
+				"url": {
+					"raw": "{{baseUrl}}/transactions/user/{{aliceUserId}}",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"transactions",
+						"user",
+						"{{aliceUserId}}"
+					]
+				}
+			}
+		},
+		{
+			"name": "11. Transfer Insufficient Funds (10000)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('Status code is 400 Bad Request', function () {",
+							"    pm.response.to.have.status(400);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{aliceToken}}"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"senderId\": {{aliceUserId}},\n  \"receiverId\": {{bobUserId}},\n  \"amount\": 10000\n}"
+				},
+				"url": {
+					"raw": "{{baseUrl}}/transactions/transfer",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"transactions",
+						"transfer"
+					]
+				}
+			}
+		},
+		{
+			"name": "12. Non-Admin Access to /transactions/all (Expect 403)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('Status code is 403 Forbidden', function () {",
+							"    pm.response.to.have.status(403);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{bobToken}}"
+					}
+				],
+				"url": {
+					"raw": "{{baseUrl}}/transactions/all",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"transactions",
+						"all"
+					]
+				}
+			}
+		}
+	]
+}

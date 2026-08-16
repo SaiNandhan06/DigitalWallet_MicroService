@@ -9,11 +9,11 @@ import org.springframework.web.bind.annotation.*;
 public interface WalletClient {
 
     @GetMapping("/wallets/{userId}")
-    WalletDto getWallet(@PathVariable("userId") Long userId);
+    WalletDto getWallet(@PathVariable Long userId);
 
     @PutMapping("/wallets/{userId}/debit")
-    WalletDto debit(@PathVariable("userId") Long userId, @RequestBody AmountDto amountDto);
+    WalletDto debit(@PathVariable Long userId, @RequestBody AmountDto amountDto);
 
     @PutMapping("/wallets/{userId}/credit")
-    WalletDto credit(@PathVariable("userId") Long userId, @RequestBody AmountDto amountDto);
+    WalletDto credit(@PathVariable Long userId, @RequestBody AmountDto amountDto);
 }

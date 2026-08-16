@@ -8,5 +8,5 @@ import org.springframework.web.bind.annotation.PostMapping;
 public interface WalletClient {
 
     @PostMapping("/wallets/{userId}/init")
-    Object initWallet(@PathVariable("userId") Long userId);
+    Object initWallet(@PathVariable Long userId);
 }

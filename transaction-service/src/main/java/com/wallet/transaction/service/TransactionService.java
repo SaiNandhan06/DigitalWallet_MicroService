@@ -48,12 +48,20 @@ public class TransactionService {
         Long receiverId = request.getReceiverId();
         BigDecimal amount = request.getAmount();
 
-        // 1. Check sender's balance via Wallet Service
+        // 1. Verify user profiles via User Service (Inter-service validation)
+        try {
+            userClient.getUserProfile(senderId);
+            userClient.getUserProfile(receiverId);
+        } catch (Exception e) {
+            log.warn("User validation failed via User Service: {}", e.getMessage());
+        }
+
+        // 2. Check sender's balance via Wallet Service
         WalletDto senderWallet;
         try {
             senderWallet = walletClient.getWallet(senderId);
         } catch (Exception e) {
-            Transaction failedTx = transactionRepository.save(new Transaction(senderId, receiverId, amount, TransactionStatus.FAILED));
+            transactionRepository.save(new Transaction(senderId, receiverId, amount, TransactionStatus.FAILED));
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Failed to retrieve sender wallet: " + e.getMessage());
         }
 

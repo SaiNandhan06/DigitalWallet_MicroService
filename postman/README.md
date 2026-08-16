@@ -6,7 +6,7 @@ This directory contains the Postman collection to test the Digital Wallet System
 
 1. **Start the System**:
    Ensure all microservices and databases are up and running (e.g. via `docker-compose up --build` or starting each Spring Boot service).
-   Verify Eureka Dashboard at [http://localhost:8761](http://localhost:8761) shows all services registered:
+   Verify Eureka Dashboard at [http://localhost:9000](http://localhost:9000) shows all services registered:
    - `AUTH-SERVICE`
    - `USER-SERVICE`
    - `WALLET-SERVICE`

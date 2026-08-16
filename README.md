@@ -99,7 +99,7 @@ The system follows a decoupled microservice architecture where all client reques
 
                                 ┌─────────────────┐
                                 │  Eureka Server  │  (Service Discovery)
-                                │   (Port 8761)   │
+                                │   (Port 9000)   │
                                 └─────────────────┘
 ```
 
@@ -115,7 +115,7 @@ digital-wallet-system/
 ├── pom.xml                     # Parent POM managing Java 21, Spring Boot & Spring Cloud BOM
 ├── docker-compose.yml          # Container orchestration for 4 Postgres DBs + 6 microservices
 ├── .gitignore                  # Git exclusion rules
-├── eureka-server/              # Service Discovery Registry (Port 8761)
+├── eureka-server/              # Service Discovery Registry (Port 9000)
 ├── api-gateway/                # Central Gateway, JWT Filter, RBAC (Port 8080)
 ├── auth-service/               # Signup, Login, Password Hashing, JWT issuance (Port 8081)
 ├── wallet-service/             # Wallet balance, Optimistic Locking, Topup/Debit/Credit (Port 8082)
@@ -230,7 +230,7 @@ The platform uses **Database-per-Service** architecture with 4 separate PostgreS
    ```
 
 4. **Verify Eureka Dashboard**:
-   Open browser at [http://localhost:8761](http://localhost:8761) and verify the following services are registered:
+   Open browser at [http://localhost:9000](http://localhost:9000) and verify the following services are registered:
    - `EUREKA-SERVER`
    - `AUTH-SERVICE`
    - `USER-SERVICE`
